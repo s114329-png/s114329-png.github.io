@@ -1,11 +1,230 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset = "utf-8">
+    <meta charset="utf-8">
     <title>QWERTY</title>
     <link rel="icon" href="IMG_9763-removebg-preview.png">
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f6f6f6;
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+
+      /* 左側分類 */
+      .sidebar {
+        width: 220px;
+        background: #111;
+        color: white;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .sidebar h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .category {
+        cursor: pointer;
+        margin: 8px 0;
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .category:hover,
+      .category.active {
+        opacity: 1;
+        font-weight: bold;
+      }
+
+      /* 中間語錄 */
+      .content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .quote {
+        background: white;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .quote span {
+        flex: 1;
+        font-size: 14px;
+      }
+
+      .quote button {
+        border: none;
+        background: #000;
+        color: white;
+        padding: 6px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      /* 右側取用區 */
+      .basket {
+        width: 260px;
+        background: #eee;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .basket h2 {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .basket-item {
+        background: white;
+        padding: 8px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        font-size: 13px;
+        position: relative;
+      }
+
+      .basket-item button {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .copy-all {
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px;
+        background: black;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+    </style>
   </head>
+
   <body>
-      hello world
+    <div class="container">
+      <!-- 左側 -->
+      <div class="sidebar">
+        <h2>語錄分類</h2>
+        <div class="category active" onclick="showCategory('mean')">Mean Girl</div>
+        <div class="category" onclick="showCategory('idol')">追星語錄</div>
+        <div class="category" onclick="showCategory('literary')">文青語錄</div>
+        <div class="category" onclick="showCategory('love')">戀愛文案</div>
+      </div>
+
+      <!-- 中間 -->
+      <div class="content" id="content"></div>
+
+      <!-- 右側 -->
+      <div class="basket">
+        <h2>取用區</h2>
+        <div id="basketList"></div>
+        <button class="copy-all" onclick="copyAll()">複製全部</button>
+      </div>
+    </div>
+
+    <script>
+      const data = {
+        mean: [
+          "我不是冷，是你不值得我熱情。",
+          "我不吵不鬧，只是不想理你。",
+          "別誤會，我對你沒意見，我只是沒興趣。"
+        ],
+        idol: [
+          "我追的不是星，是青春。",
+          "他站在舞台上，我就站在世界那一邊。",
+          "世界再吵，他一出現就靜音。"
+        ],
+        literary: [
+          "生活本來就不完美，但很值得。",
+          "文字是我和世界保持距離的方式。",
+          "今天也在慢慢喜歡自己。"
+        ],
+        love: [
+          "你一靠近，我就忘了退後。",
+          "喜歡不是佔有，是忍不住心軟。",
+          "我把溫柔都留給你。"
+        ]
+      };
+
+      let currentCategory = "mean";
+      const content = document.getElementById("content");
+      const basketList = document.getElementById("basketList");
+
+      function showCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
+        event.target.classList.add("active");
+        renderQuotes();
+      }
+
+      function renderQuotes() {
+        content.innerHTML = "";
+        data[currentCategory].forEach(q => {
+          const div = document.createElement("div");
+          div.className = "quote";
+
+          const span = document.createElement("span");
+          span.textContent = q;
+
+          const addBtn = document.createElement("button");
+          addBtn.textContent = "加入";
+          addBtn.onclick = () => addToBasket(q);
+
+          const copyBtn = document.createElement("button");
+          copyBtn.textContent = "複製";
+          copyBtn.onclick = () => copyText(q);
+
+          div.append(span, addBtn, copyBtn);
+          content.appendChild(div);
+        });
+      }
+
+      function addToBasket(text) {
+        const div = document.createElement("div");
+        div.className = "basket-item";
+        div.textContent = text;
+
+        const del = document.createElement("button");
+        del.textContent = "✕";
+        del.onclick = () => div.remove();
+
+        div.appendChild(del);
+        basketList.appendChild(div);
+      }
+
+      function copyText(text) {
+        navigator.clipboard.writeText(text);
+        alert("已複製！");
+      }
+
+      function copyAll() {
+        const texts = [...basketList.children].map(d => d.textContent.replace("✕", ""));
+        navigator.clipboard.writeText(texts.join("\n"));
+        alert("全部已複製！");
+      }
+
+      renderQuotes();
+    </script>
   </body>
 </html>
