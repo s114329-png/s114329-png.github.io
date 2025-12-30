@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>QWERTY 文案庫</title>
+  <link rel="icon" href="IMG_9763-removebg-preview.png">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f6f6f6;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #111;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .category {
+      cursor: pointer;
+      margin: 8px 0;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .category.active,
+    .category:hover {
+      opacity: 1;
+      font-weight: bold;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .quote {
+      background: white;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .quote span {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .quote button {
+      border: none;
+      background: black;
+      color: white;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .basket {
+      width: 260px;
+      background: #eee;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .basket-item {
+      background: white;
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      position: relative;
+    }
+
+    .basket-item button {
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .copy-all {
+      width: 100%;
+      padding: 8px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="sidebar">
+    <h2>語錄分類</h2>
+    <div class="category active" onclick="showCategory('idol', this)">追星語錄</div>
+    <div class="category" onclick="showCategory('love', this)">戀愛文案</div>
+    <div class="category" onclick="showCategory('selfie', this)">自拍文案</div>
+    <div class="category" onclick="showCategory('good', this)">誇人語錄</div>
+    <div class="category" onclick="showCategory('winter', this)">冬天文案</div>
+    <div class="category" onclick="showCategory('ceo', this)">霸道語錄</div>
+  </div>
+
+  <div class="content" id="content"></div>
+
+  <div class="basket">
+    <h3>取用區</h3>
+    <div id="basketList"></div>
+    <button class="copy-all" onclick="copyAll()">複製全部</button>
+  </div>
+
+</div>
+
+<script>
+const data = {
+  idol: [
+    "微微顫抖的鏡頭 是我呼之欲出的心跳",
+    "彩帶落下的瞬間 我也站在幸福裡",
+    "燈光打在你身上 被照亮的人卻是我",
+    "你走出螢幕 我摘下耳機",
+    "這次眼睛比手機先看見你",
+    "我也願意做你的頭號支持者",
+    "漂亮的眼睛要留幸福的淚",
+    "買了你的周邊 就好像你在我周邊",
+    "人不能靠一個瞬間活一輩子 可那個瞬間裡有你",
+    "你給了我翻山越嶺的勇氣",
+    "賣貨便的38塊是你來我家裡的車馬費",
+    "你是我世界裡溫暖的小屋 那裡有著趕走壞心情的魔法 和把哭臉染成笑容的超能力",
+    "下次我們的雙眸 會映有同一片風景",
+    "定格 讓幸福具象化",
+    "追逐星光的人 也會身披萬丈光芒",
+    "世界在下沉 我在追逐星星",
+    "因為你 我第一次想成為這麼好的人",
+    "走你走過的路 我們算不算相逢",
+    "你是我千萬個心碎的理由 也是從黑暗中拉出我的那雙手"
+  ],
+
+
+  love: [
+    "瞳孔與心的距離 在與你對視時清零",
+    "不是因為天氣晴朗才愛你 是因為愛你所以雨天也是好天氣",
+    "生命中給了我數不清的積雪 而你是我遇到的第一個春天",
+    "你笑臉盈盈的樣子好可愛 好想把全世界都給你",
+    "幸福不說話 卻在平淡中生根發芽",
+    "愛你的話說出口了卻總覺得不足 於是化成一句句回家小心",
+    "擁抱你 就是擁抱我的全世界",
+    "民以食為天 我以你為先",
+    "永遠太遠 所以我們約定明天見",
+    "夜裡感覺眼角癢癢的 以為又是眼淚 睜開眼睛發現是戀人軟軟的髮梢",
+    "那些想念你的瞬間太美 惹得繆斯都翹起了嘴",
+    "喜歡怎麼藏 悸動怎麼涼",
+    "把嘴堵上 情話留在嘴裡邊也無妨",
+    "整個宇宙的美好只屬於你和我",
+    "能不能 讓這份邂逅沒有盡頭",
+    "以後別做朋友 做我的初戀",
+    "我們現在就像是青春電影的某一幕",
+    "Twenty-seven days alone means twenty million ways to cope without you.",
+    "I blinked and suddenly I had a valentine."
+  ],
+
+  selfie: [
+    "Frames of my life",
+    "Live once to love twice",
+    "Ur new wallpaper",
+    "Effortless",
+    "Don't look at the caption, look at me",
+    "Born to glow",
+    "Wake up looking like this",
+    "Little miss, never misses",
+    "Playing dress up",
+    "Allergic to limitations",
+    "I feel bonita",
+    "Listen, I'm the one and only",
+    "Fit check",
+    "It's giving what it's supposed to give",
+    "What's 4 plus 4?",
+    "Angelic aura"
+  ],
+
+  good: [
+    "想了好多漂亮話 結果發現最漂亮的是你",
+    "真是麻雀吃草莓，雀食美",
+    "以後炒菜不用加鹽了，因為你的美麗無須多言",
+    "你有學鋼琴嗎？想說你長得很像我初戀琴人",
+    "元素週期表少了三個元素，原來鎂鋁在這裡，我的鋅也在這裡",
+    "想跪著求自己不要再愛上你了，結果發現跪著正好能跟你求婚",
+    "噢不，故事書沒關好，有公主跑出來了！",
+    "自從遇見你之後，我猜拳只能出剪刀，因為你就是我的拳布",
+    "他們用漂亮形容你，而我用你形容漂亮",
+    "上次被抓去緬甸，但他們把我送回來了，因為我只能為你掏心掏肺",
+    "美籍華人很常見，華裔美人很少見",
+    "剛剛把去法國的機票退掉了，因為我的蒙娜麗莎就在這裡"
+  ],
+
+  winter: [
+    "比冬天先來臨的是你炙熱的手心和溫暖的擁抱",
+    "我的心降臨在有你的冬天",
+    "記憶是雪地零落的詩篇",
+    "愛在冬天有毛茸茸的訊號",
+    "可不可以，藉著天冷的理由，再靠近你一點點",
+    "命運像圍巾一樣把我們纏繞在一起",
+    "寒風催促著我們相擁",
+    "我想變成一片雪花，輕輕落在你鼻尖",
+    "冷空氣挾著回憶襲來，我才發覺又過了一年",
+    "與其懷念那年冬天，不如說懷念那年的我們",
+    "想把滾燙的臉頰埋進柔軟的積雪裡",
+    "幸福就是冬天的掌心有你的溫度",
+    "雪地裡相愛，他們說零下已結晶的誓言不會壞",
+    "大雪短暫，我們永恆",
+    "女巫使用了解藥，所以今晚是平安夜",
+    "我期待的不是雪，而是有你的冬天",
+    "Cold hands, warm coffee, and a cozy heart",
+    "Make it a December to remember"
+  ],
+
+  ceo: [
+    "動我可以，別動我的人，這是規矩",
+    "你若折我翅膀，我定毀你整個天堂",
+    "一吵架就把狀態改成單身，你媽罵你怎麼不把狀態改成孤兒",
+    "頂峰相見這句話很好笑，憑什麼跟你頂峰相見，你又不配",
+    "別信別看，每個拉你上岸的人都會讓你摔得更慘",
+    "你討厭我關我什麼事，搞得好像被你喜歡我就能昇華人生",
+    "素質不詳，遇強則強",
+    "你潑我的冷水，我會燒開了再潑回去",
+    "我就是這樣，你要是看我不爽，可以試著把自己弄瞎",
+    "我是學醫的，說你有病你就是有病",
+    "我是修車的，說你是備胎你就是備胎",
+    "我是配鑰匙的，說你不配你就是不配",
+    "你敢找下家，我一定祈禱你們完蛋",
+    "我做事不用所有人點頭，我活著就是讓討厭的人不爽",
+    "姊不是蒙娜麗莎，用不著對每個人微笑",
+    "你看不慣我又幹不掉我的樣子真的很好笑"
+  ]
+};
+</script>
+
+
+let currentCategory = "idol";
+const content = document.getElementById("content");
+const basketList = document.getElementById("basketList");
+
+function showCategory(cat, el) {
+  currentCategory = cat;
+  document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  renderQuotes();
+}
+
+function renderQuotes() {
+  content.innerHTML = "";
+  data[currentCategory].forEach(q => {
+    const div = document.createElement("div");
+    div.className = "quote";
+
+    const span = document.createElement("span");
+    span.textContent = q;
+
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "加入";
+    addBtn.onclick = () => addToBasket(q);
+
+    const copyBtn = document.createElement("button");
+    copyBtn.textContent = "複製";
+    copyBtn.onclick = () => navigator.clipboard.writeText(q);
+
+    div.append(span, addBtn, copyBtn);
+    content.appendChild(div);
+  });
+}
+
+function addToBasket(text) {
+  const div = document.createElement("div");
+  div.className = "basket-item";
+  div.textContent = text;
+
+  const del = document.createElement("button");
+  del.textContent = "✕";
+  del.onclick = () => div.remove();
+
+  div.appendChild(del);
+  basketList.appendChild(div);
+}
+
+function copyAll() {
+  const texts = [...basketList.children].map(d => d.textContent.replace("✕",""));
+  navigator.clipboard.writeText(texts.join("\n"));
+}
+
+renderQuotes();
+</script>
+
+</body>
+</html>
