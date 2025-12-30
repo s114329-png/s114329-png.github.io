@@ -12,8 +12,43 @@
       background: #f6f6f6;
     }
 
-    .container {
+    /* ===== 首頁 ===== */
+    .home {
+      height: 100vh;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .home h1 {
+      margin-bottom: 10px;
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 180px);
+      gap: 20px;
+    }
+
+    .home-btn {
+      background: black;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .home-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* ===== 主頁 ===== */
+    .container {
+      display: none;
       height: 100vh;
     }
 
@@ -113,11 +148,26 @@
 </head>
 
 <body>
-<div class="container">
+
+<!-- ===== 首頁 ===== -->
+<div class="home" id="home">
+  <h1>QWERTY 文案庫</h1>
+  <div class="home-grid">
+    <div class="home-btn" onclick="enterSite('idol')">追星語錄</div>
+    <div class="home-btn" onclick="enterSite('love')">戀愛文案</div>
+    <div class="home-btn" onclick="enterSite('selfie')">自拍文案</div>
+    <div class="home-btn" onclick="enterSite('good')">誇人語錄</div>
+    <div class="home-btn" onclick="enterSite('winter')">冬天文案</div>
+    <div class="home-btn" onclick="enterSite('ceo')">霸道語錄</div>
+  </div>
+</div>
+
+<!-- ===== 主站 ===== -->
+<div class="container" id="site">
 
   <div class="sidebar">
     <h2>語錄分類</h2>
-    <div class="category active" onclick="showCategory('idol', this)">追星語錄</div>
+    <div class="category" onclick="showCategory('idol', this)">追星語錄</div>
     <div class="category" onclick="showCategory('love', this)">戀愛文案</div>
     <div class="category" onclick="showCategory('selfie', this)">自拍文案</div>
     <div class="category" onclick="showCategory('good', this)">誇人語錄</div>
@@ -158,8 +208,6 @@ const data = {
     "走你走過的路 我們算不算相逢",
     "你是我千萬個心碎的理由 也是從黑暗中拉出我的那雙手"
   ],
-
-
   love: [
     "瞳孔與心的距離 在與你對視時清零",
     "不是因為天氣晴朗才愛你 是因為愛你所以雨天也是好天氣",
@@ -181,7 +229,6 @@ const data = {
     "Twenty-seven days alone means twenty million ways to cope without you.",
     "I blinked and suddenly I had a valentine."
   ],
-
   selfie: [
     "Frames of my life",
     "Live once to love twice",
@@ -200,7 +247,6 @@ const data = {
     "What's 4 plus 4?",
     "Angelic aura"
   ],
-
   good: [
     "想了好多漂亮話 結果發現最漂亮的是你",
     "真是麻雀吃草莓，雀食美",
@@ -215,7 +261,6 @@ const data = {
     "美籍華人很常見，華裔美人很少見",
     "剛剛把去法國的機票退掉了，因為我的蒙娜麗莎就在這裡"
   ],
-
   winter: [
     "比冬天先來臨的是你炙熱的手心和溫暖的擁抱",
     "我的心降臨在有你的冬天",
@@ -236,7 +281,6 @@ const data = {
     "Cold hands, warm coffee, and a cozy heart",
     "Make it a December to remember"
   ],
-
   ceo: [
     "動我可以，別動我的人，這是規矩",
     "你若折我翅膀，我定毀你整個天堂",
@@ -256,12 +300,17 @@ const data = {
     "你看不慣我又幹不掉我的樣子真的很好笑"
   ]
 };
-</script>
-
 
 let currentCategory = "idol";
 const content = document.getElementById("content");
 const basketList = document.getElementById("basketList");
+
+function enterSite(cat) {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("site").style.display = "flex";
+  currentCategory = cat;
+  renderQuotes();
+}
 
 function showCategory(cat, el) {
   currentCategory = cat;
@@ -309,8 +358,6 @@ function copyAll() {
   const texts = [...basketList.children].map(d => d.textContent.replace("✕",""));
   navigator.clipboard.writeText(texts.join("\n"));
 }
-
-renderQuotes();
 </script>
 
 </body>
